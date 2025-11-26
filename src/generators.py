@@ -50,7 +50,7 @@ def nearly_sorted(n: int, swaps: int, seed=None) -> list[int]:
 
     lst = []
     for _ in range(n):
-        lst.append(random.randint(-100, 100))
+        lst.append(random.randint(-2*n, 2*n))
     lst.sort()
 
     swap_ind = []
@@ -88,10 +88,10 @@ def many_duplicates(n: int, k_unique=5, seed=None) -> list[int]:
     if seed is not None:
         random.seed(seed)
 
-    duplicate_value = random.randint(-100, 100)
+    duplicate_value = random.randint(-2*n, 2*n)
     lst = [duplicate_value] * n
 
-    available_range = [x for x in range(-100, 100) if x != duplicate_value]
+    available_range = [x for x in range(-2*n, 2*n) if x != duplicate_value]
     rand_nums = random.sample(available_range, k_unique)
 
     positions = random.sample(range(n), k_unique)
@@ -112,7 +112,7 @@ def reverse_sorted(n: int) -> list[int]:
         list[int]: Отсортированный по убыванию список
     """
 
-    rand_lst = [random.randint(-100, 100) for _ in range(n)]
+    rand_lst = [random.randint(-2*n, 2*n) for _ in range(n)]
 
     rand_lst.sort(reverse=True)
     return rand_lst

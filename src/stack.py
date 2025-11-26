@@ -28,7 +28,8 @@ class Stack:
 
     def peek(self) -> int:
         if not self.stack:
-            raise IndexError("Выталкивание из пустого стека")
+            raise IndexError(
+                "Невозможно узнать верхнее значение, т.к. стек пуст")
 
         top = self.stack[-1]
         return top

@@ -1,3 +1,33 @@
+def type_check_int(a: list) -> bool:
+    """Проверяет все значения списка на тип int
+
+    Args:
+        a (list): список, котоый нужно проверить
+
+    Returns:
+        bool: являются ли все элементы списка типом int
+    """
+
+    if all(isinstance(x, type(a[0])) for x in a) and type(a[0]) == int:
+        return True
+    return False
+
+
+def type_check_float(a: list) -> bool:
+    """Проверяет все значения списка на тип float
+
+    Args:
+        a (list): список, котоый нужно проверить
+
+    Returns:
+        bool: являются ли все элементы списка типом float
+    """
+
+    if all(isinstance(x, type(a[0])) for x in a) and type(a[0]) == float:
+        return True
+    return False
+
+
 def bubble_sort(a: list[int]) -> list[int]:
     """Пузырьковая сортировка по возрастанию
 
@@ -9,6 +39,9 @@ def bubble_sort(a: list[int]) -> list[int]:
     """
     if len(a) == 0:
         raise ValueError("Передан пустой список")
+
+    if not type_check_int(a):
+        raise ValueError("Все элементы списка должны быть типа 'int'")
 
     num = a[:]
     for i in range(len(num)-1):
@@ -32,7 +65,15 @@ def quick_sort(a: list[int]) -> list[int]:
     Returns:
         list[int]: отсорированный список
     """
+
     nums = a[:]
+
+    if len(nums) == 0:
+        return nums
+
+    if not type_check_int(nums):
+        raise ValueError("Все элементы списка должны быть типа 'int'")
+
     j = 1
     i = 0
 
@@ -71,8 +112,11 @@ def counting_sort(a: list[int]) -> list[int]:
     Returns:
         list[int]: отсортированный список
     """
-    if len(a) == 0:
+    if not a:
         raise ValueError("Передан пустой список")
+
+    if not type_check_int(a):
+        raise ValueError("Все элементы списка должны быть типа 'int'")
 
     mn = min(a)
     mx = max(a)
@@ -96,8 +140,6 @@ def counting_sort(a: list[int]) -> list[int]:
 
     return output
 
-# Пофиксить отрицательные числа в radix_sort()
-
 
 def radix_sort(a: list[int], base=10) -> list[int]:
     """Сортировка по возрастанию методом radix sort
@@ -108,27 +150,59 @@ def radix_sort(a: list[int], base=10) -> list[int]:
     Returns:
         list[int]: отсортированный список
     """
-    if len(a) == 0:
+    if not a:
         raise ValueError("Передан пустой список")
 
-    nums = a[:]
-    mx = len(str(max(nums)))
+    if not type_check_int(a):
+        raise ValueError("Все элементы списка должны быть типа 'int'")
 
-    interm = [[] for _ in range(base)]
+    negative = [abs(x) for x in a if x < 0]
+    positive = [x for x in a if x >= 0]
 
-    for i in range(0, mx):
-        for j in nums:
-            digit = (j // base ** i) % base
-            interm[digit].append(j)
+    def radix_sort_positive(nums):
+        if len(nums) == 0:
+            return []
 
-        nums = [x for queue in interm for x in queue]
-
+        mx = len(str(max(nums)))
         interm = [[] for _ in range(base)]
 
-    return nums
+        for i in range(0, mx):
+            for j in nums:
+                digit = (j // base ** i) % base
+                interm[digit].append(j)
+
+            nums = [x for queue in interm for x in queue]
+            interm = [[] for _ in range(base)]
+
+        return nums
+
+    sorted_negative = radix_sort_positive(negative)
+    sorted_positive = radix_sort_positive(positive)
+
+    return [-x for x in reversed(sorted_negative)] + sorted_positive
 
 
-def bucket_sort(a: list[int], bucket_count: int | None = None) -> list[int]:
+def bucket_sort(a: list[float], bucket_count: int | None = None) -> list[float]:
+    """Ведерковая сортировка
+
+    Args:
+        a (list[float]): список, который нужно отсортировать
+        bucket_count (int | None, optional): кол-во ячеек для сортировки. По умолчанию None.
+
+    Raises:
+        ValueError: передан пустой список
+        ValueError: Все элементы списка должны быть типа 'float'
+
+    Returns:
+        list[float]: отсортированный по возрастанию список
+    """
+
+    if not a:
+        raise ValueError("Передан пустой список")
+
+    if not type_check_float(a):
+        raise ValueError("Все элементы списка должны быть типа 'float'")
+
     nums = a[:]
 
     mn = min(nums)
@@ -148,9 +222,6 @@ def bucket_sort(a: list[int], bucket_count: int | None = None) -> list[int]:
         if bucket == []:
             continue
         else:
-            sorted_list.extend(quick_sort(bucket))
+            sorted_list.extend(sorted(bucket))
 
     return sorted_list
-
-
-print(radix_sort([0, 2, -4, 6, 2, -8, 6, 10, 42, 11, 21]))

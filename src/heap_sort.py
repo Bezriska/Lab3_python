@@ -1,3 +1,6 @@
+from src.sorts import type_check_float, type_check_int
+
+
 def heapify(nums: list[int], n, i):
     """Сравниевает родительские и дочерние элементы, перемещает в верх кучи наибольший эл-т
 
@@ -32,6 +35,12 @@ def heap_sort(a: list[int]) -> list[int]:
         list[int]: отсортированный по возрастанию список
     """
 
+    if not a:
+        raise ValueError("Передан пустой список")
+
+    if not type_check_int(a):
+        raise ValueError("Все элементы списка должны быть типа 'int'")
+
     nums = a[:]
 
     n = len(nums)
@@ -44,6 +53,3 @@ def heap_sort(a: list[int]) -> list[int]:
         heapify(nums, i, 0)
 
     return nums
-
-
-print(heap_sort([0, 2, -4, 6, 2, -8, 6, 10, 42, 11, 21]))
